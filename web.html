@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Perhitungan Nilai Akademik</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+header {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 10px;
+    font-size: 26px;
+}
+
+header p {
+    font-size: 14px;
+    opacity: .9;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+h2 {
+    color: #1d4ed8;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #2563eb;
+}
+
+button {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+    padding: 7px 10px;
+    margin: 0;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.05);
+}
+
+.stat-box p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.stat-box h3 {
+    margin-top: 10px;
+    color: #2563eb;
+    font-size: 27px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 750px;
+}
+
+th, td {
+    padding: 13px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+}
+
+th {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.A { background: #dcfce7; color: #15803d; }
+.B { background: #dbeafe; color: #1d4ed8; }
+.C { background: #fef3c7; color: #a16207; }
+.D { background: #ffedd5; color: #c2410c; }
+.E { background: #fee2e2; color: #b91c1c; }
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+@media(max-width: 650px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    header h1 {
+        font-size: 21px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Perhitungan Nilai Akademik Siswa</h1>
+    <p>Sistem Pengolahan Nilai dan Penentuan Predikat Akademik</p>
+</header>
+
+<div class="container">
+
+    <div class="stats">
+        <div class="stat-box">
+            <p>Jumlah Siswa</p>
+            <h3 id="jumlah">0</h3>
+        </div>
+
+        <div class="stat-box">
+            <p>Rata-rata Kelas</p>
+            <h3 id="rata">0</h3>
+        </div>
+
+        <div class="stat-box">
+            <p>Jumlah Lulus</p>
+            <h3 id="lulus">0</h3>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Input Data Nilai Siswa</h2>
+
+        <form id="formNilai">
+            <div class="form-grid">
+
+                <div class="input-group">
+                    <label>Nama Siswa</label>
+                    <input type="text" id="nama"
+                    placeholder="Masukkan nama siswa" required>
+                </div>
+
+                <div class="input-group">
+                    <label>NIS</label>
+                    <input type="text" id="nis"
+                    placeholder="Masukkan NIS" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Nilai Tugas (30%)</label>
+                    <input type="number" id="tugas"
+                    min="0" max="100" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Nilai UTS (30%)</label>
+                    <input type="number" id="uts"
+                    min="0" max="100" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Nilai UAS (30%)</label>
+                    <input type="number" id="uas"
+                    min="0" max="100" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Kehadiran (10%)</label>
+                    <input type="number" id="hadir"
+                    min="0" max="100" required>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn-primary">
+                + Hitung dan Simpan Nilai
+            </button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Hasil Perhitungan Nilai Akademik</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIS</th>
+                        <th>Tugas</th>
+                        <th>UTS</th>
+                        <th>UAS</th>
+                        <th>Hadir</th>
+                        <th>Nilai Akhir</th>
+                        <th>Predikat</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody id="hasil">
+                    <tr>
+                        <td colspan="11">
+                            Belum ada data siswa.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Ketentuan Bobot dan Predikat</h2>
+
+        <p>Bobot penilaian:</p>
+        <ul style="padding: 15px 25px; line-height: 2;">
+            <li>Tugas: 30%</li>
+            <li>UTS: 30%</li>
+            <li>UAS: 30%</li>
+            <li>Kehadiran: 10%</li>
+        </ul>
+
+        <p><b>Ketentuan predikat:</b></p>
+        <ul style="padding: 15px 25px; line-height: 2;">
+            <li>A = 85 - 100 (Sangat Baik)</li>
+            <li>B = 75 - 84,99 (Baik)</li>
+            <li>C = 65 - 74,99 (Cukup)</li>
+            <li>D = 50 - 64,99 (Kurang)</li>
+            <li>E = 0 - 49,99 (Sangat Kurang)</li>
+        </ul>
+        <p><b>KKM: 75</b></p>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2026 Sistem Perhitungan Nilai Akademik Siswa</p>
+    <p>Dibuat untuk Studi Kasus Sederhana Pendidikan Teknologi Informasi</p>
+</footer>
+
+<script>
+const STORAGE_KEY = "data_nilai_siswa";
+
+let dataSiswa = muatData();
+
+function muatData() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function simpanData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataSiswa));
+}
+
+const form = document.getElementById("formNilai");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const nama = document.getElementById("nama").value.trim();
+    const nis = document.getElementById("nis").value.trim();
+
+    const tugas = Number(document.getElementById("tugas").value);
+    const uts = Number(document.getElementById("uts").value);
+    const uas = Number(document.getElementById("uas").value);
+    const hadir = Number(document.getElementById("hadir").value);
+
+    const nilai = [tugas, uts, uas, hadir];
+
+    if (!nama || !nis || nilai.some(n => !Number.isFinite(n) || n < 0 || n > 100)) {
+        alert("Pastikan semua data benar dan nilai berada di antara 0-100!");
+        return;
+    }
+
+    if (dataSiswa.some(s => s.nis === nis)) {
+        alert("NIS sudah terdaftar!");
+        return;
+    }
+
+    const akhir =
+        (tugas * 0.30) +
+        (uts * 0.30) +
+        (uas * 0.30) +
+        (hadir * 0.10);
+
+    let predikat;
+
+    if (akhir >= 85) predikat = "A";
+    else if (akhir >= 75) predikat = "B";
+    else if (akhir >= 65) predikat = "C";
+    else if (akhir >= 50) predikat = "D";
+    else predikat = "E";
+
+    const status = akhir >= 75 ? "Lulus" : "Tidak Lulus";
+
+    dataSiswa.push({
+        nama, nis, tugas, uts, uas, hadir,
+        akhir, predikat, status
+    });
+
+    simpanData();
+    tampilkanData();
+    form.reset();
+});
+
+function tampilkanData() {
+    const tabel = document.getElementById("hasil");
+
+    tabel.innerHTML = "";
+
+    dataSiswa.forEach((siswa, index) => {
+        tabel.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${escapeHTML(siswa.nama)}</td>
+                <td>${escapeHTML(siswa.nis)}</td>
+                <td>${siswa.tugas}</td>
+                <td>${siswa.uts}</td>
+                <td>${siswa.uas}</td>
+                <td>${siswa.hadir}</td>
+                <td><b>${siswa.akhir.toFixed(2)}</b></td>
+                <td>
+                    <span class="badge ${siswa.predikat}">
+                        ${siswa.predikat}
+                    </span>
+                </td>
+                <td>${siswa.status}</td>
+                <td>
+                    <button class="btn-delete"
+                    onclick="hapusData(${index})">
+                        Hapus
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+
+    if (dataSiswa.length === 0) {
+        tabel.innerHTML = `
+            <tr><td colspan="11">Belum ada data siswa.</td></tr>
+        `;
+    }
+
+    hitungStatistik();
+}
+
+function escapeHTML(teks) {
+    return teks.replace(/[&<>"']/g, karakter => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[karakter]);
+}
+
+function hapusData(index) {
+    if (confirm("Yakin ingin menghapus data siswa ini?")) {
+        dataSiswa.splice(index, 1);
+        simpanData();
+        tampilkanData();
+    }
+}
+
+function hitungStatistik() {
+    const jumlah = dataSiswa.length;
+
+    const total = dataSiswa.reduce(
+        (sum, siswa) => sum + siswa.akhir, 0
+    );
+
+    const rata = jumlah > 0 ? total / jumlah : 0;
+
+    const lulus = dataSiswa.filter(
+        siswa => siswa.status === "Lulus"
+    ).length;
+
+    document.getElementById("jumlah").textContent = jumlah;
+    document.getElementById("rata").textContent = rata.toFixed(2);
+    document.getElementById("lulus").textContent = lulus;
+}
+
+tampilkanData();
+</script>
+
+</body>
+</html>
